@@ -1,15 +1,29 @@
 import axios from 'axios';
 
-const API_URL = 'https://studymate-2-ye9j.onrender.com/api';
+// ========================================
+// BACKEND API URL
+// ========================================
+
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  'https://studymate-2-ye9j.onrender.com/api';
+
+// ========================================
+// AXIOS INSTANCE
+// ========================================
 
 const api = axios.create({
   baseURL: API_URL,
   headers: {
-    'Content-Type': 'application/json',
+    'Content-Type': 'application/json'
   },
+  withCredentials: true
 });
 
-// Add token to all requests
+// ========================================
+// REQUEST INTERCEPTOR
+// ========================================
+
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -25,7 +39,10 @@ api.interceptors.request.use(
   }
 );
 
-// Handle response errors
+// ========================================
+// RESPONSE INTERCEPTOR
+// ========================================
+
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -35,41 +52,53 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       localStorage.removeItem('user');
 
-      window.location.href = '/login';
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
 
     return Promise.reject(error);
   }
 );
 
-// ==================== AUTH APIs ====================
+// ========================================
+// AUTH APIs
+// ========================================
 
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
 
   login: (data) => api.post('/auth/login', data),
 
-  getMe: () => api.get('/auth/me'),
+  getMe: () => api.get('/auth/me')
 };
 
-// ==================== TOPIC APIs ====================
+// ========================================
+// TOPIC APIs
+// ========================================
 
 export const topicAPI = {
   generate: (data) => api.post('/topics/generate', data),
 
   getAll: () => api.get('/topics'),
 
-  getOne: (id) => api.get(`/topics/${id}`),
+  getOne: (id) => api.get(`/topics/${id}`)
 };
 
-// ==================== QUIZ APIs ====================
+// ========================================
+// QUIZ APIs
+// ========================================
 
 export const quizAPI = {
   generate: (data) => api.post('/quiz/generate', data),
 
   submit: (data) => api.post('/quiz/submit', data),
 
-  getHistory: () => api.get('/quiz/history'),
+  getHistory: () => api.get('/quiz/history')
 };
+
+// ========================================
+// EXPORT
+// ========================================
 
 export default api;
