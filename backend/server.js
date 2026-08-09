@@ -17,7 +17,7 @@ app.use(cors({
     origin: [
         'http://localhost:5173',
         'http://localhost:3000',
-        'https://studymate-1-h4y9.onrender.com'
+        'https://studymate-4.onrender.com'
     ],
     credentials: true
 }));
