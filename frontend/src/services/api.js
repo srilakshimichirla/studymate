@@ -1,8 +1,6 @@
 import axios from 'axios';
 
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  'http://localhost:5000/api';
+const API_URL = 'https://studymate-2-ye9j.onrender.com/api';
 
 const api = axios.create({
   baseURL: API_URL,
@@ -22,16 +20,21 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => {
+    return Promise.reject(error);
+  }
 );
 
-// Handle 401 errors
+// Handle response errors
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+
       window.location.href = '/login';
     }
 
@@ -39,24 +42,33 @@ api.interceptors.response.use(
   }
 );
 
-// Auth APIs
+// ==================== AUTH APIs ====================
+
 export const authAPI = {
   register: (data) => api.post('/auth/register', data),
+
   login: (data) => api.post('/auth/login', data),
+
   getMe: () => api.get('/auth/me'),
 };
 
-// Topic APIs
+// ==================== TOPIC APIs ====================
+
 export const topicAPI = {
   generate: (data) => api.post('/topics/generate', data),
+
   getAll: () => api.get('/topics'),
+
   getOne: (id) => api.get(`/topics/${id}`),
 };
 
-// Quiz APIs
+// ==================== QUIZ APIs ====================
+
 export const quizAPI = {
   generate: (data) => api.post('/quiz/generate', data),
+
   submit: (data) => api.post('/quiz/submit', data),
+
   getHistory: () => api.get('/quiz/history'),
 };
 
