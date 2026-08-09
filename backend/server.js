@@ -14,8 +14,12 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
-  credentials: true
+    origin: [
+        'http://localhost:5173',
+        'http://localhost:3000',
+        'https://studymate-1-h4y9.onrender.com'
+    ],
+    credentials: true
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
